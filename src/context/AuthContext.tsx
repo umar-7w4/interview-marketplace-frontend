@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       router.push("/dashboard");
     } catch (error) {
       console.error("Signup failed:", error);
-      throw new Error("Failed to create account. Please try again.");
+      throw new Error("Failed to create account. Please try again!");
     }
   };
 
