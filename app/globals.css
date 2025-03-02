@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Styles */
+body {
+  @apply bg-dark text-textPrimary;
+}
+
+input {
+  @apply border border-border bg-inputBg text-textPrimary focus:ring-2 focus:ring-primary;
+}
+
+button {
+  @apply bg-buttonBg text-white hover:bg-buttonHover focus:ring-2 focus:ring-primary;
+}
+
+.bg-card-gradient {
+  background: linear-gradient(135deg, #181C29 30%, #1F2535 100%);
+}
