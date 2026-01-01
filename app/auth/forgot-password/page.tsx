@@ -21,19 +21,34 @@ export default function ForgotPassword() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        `http://localhost:8080/api/users/forgot-password?email=${encodeURIComponent(
+          email
+        )}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (response.ok) {
-        setMessage("Password reset link sent to your email.");
+        const resetToken = await response.text();
+        if (resetToken) {
+          localStorage.setItem("resetToken", resetToken);
+          router.push("/auth/reset-link-sent");
+        } else {
+          setError("Failed to get reset token. Please check your email.");
+        }
       } else {
-        const data = await response.json();
-        setError(data.message || "User not found.");
+        try {
+          const data = await response.json();
+          setError(data.message || "User not found.");
+        } catch (jsonError) {
+          setError("User not found.");
+        }
       }
     } catch (err) {
+      console.error("Forgot Password Error:", err);
       setError("Something went wrong. Please try again.");
     }
     setLoading(false);
@@ -41,15 +56,17 @@ export default function ForgotPassword() {
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-dark">
-      <Card className="bg-cardBg shadow-xl p-12 rounded-lg border border-gray-700 w-full max-w-3xl">
-        <h2 className="text-3xl font-bold text-center">Forgot Password?</h2>
-        <p className="text-center text-textSecondary text-lg">
+      <Card className="bg-[#1E2535] shadow-xl p-12 rounded-lg border border-gray-700 w-full max-w-3xl">
+        <h2 className="text-3xl font-bold text-center text-white">
+          Forgot Password?
+        </h2>
+        <p className="text-center text-textSecondary text-lg text-white">
           Enter your email to receive a reset link.
         </p>
 
         <form className="space-y-6 mt-6" onSubmit={handleForgotPassword}>
           <div>
-            <Label className="text-xl">Email</Label>
+            <Label className="text-xl text-white">Email</Label>
             <Input
               type="email"
               placeholder="you@example.com"
@@ -74,7 +91,7 @@ export default function ForgotPassword() {
         {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 
         <Separator className="my-6 bg-gray-600" />
-        <p className="text-center">
+        <p className="text-center text-white">
           Remembered your password?{" "}
           <a
             href="/auth/login"
@@ -84,6 +101,12 @@ export default function ForgotPassword() {
           </a>
         </p>
       </Card>
+      <style jsx global>{`
+        input {
+          color: black !important;
+          caret-color: black !important;
+        }
+      `}</style>
     </div>
   );
 }

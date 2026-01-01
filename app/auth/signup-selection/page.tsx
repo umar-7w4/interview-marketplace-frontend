@@ -36,7 +36,7 @@ export default function SignupSelection() {
           We’ll personalize your experience accordingly.
         </p>
 
-        {/* Role Selection Cards */}
+        {}
         <div className="mt-10 space-y-8">
           {/* Interviewer Selection */}
           <div
@@ -56,7 +56,7 @@ export default function SignupSelection() {
             </div>
           </div>
 
-          {/* Interviewee Selection */}
+          {}
           <div
             className={`flex items-center p-12 rounded-2xl border-2 cursor-pointer transition-all ${
               selectedRole === "interviewee"
@@ -75,7 +75,7 @@ export default function SignupSelection() {
           </div>
         </div>
 
-        {/* Proceed Button */}
+        {}
         <div className="mt-10 flex justify-center">
           <Button
             className={`px-10 py-8 text-2xl font-semibold rounded-lg ${

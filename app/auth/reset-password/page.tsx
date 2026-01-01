@@ -1,21 +1,20 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 export default function ResetPassword() {
+  const searchParams = useSearchParams(); //  Extract query parameters
+  const token = searchParams.get("token"); //  Get the reset token from the URL
+  const router = useRouter();
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const resetToken = searchParams.get("token");
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,63 +22,73 @@ export default function ResetPassword() {
     setError("");
     setLoading(true);
 
-    if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
+    if (!token) {
+      setError("Reset token is missing. Please request a new reset link.");
       setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resetToken, newPassword, confirmPassword }),
-      });
+      const response = await fetch(
+        `http://localhost:8080/api/users/reset-password?token=${token}&newPassword=${encodeURIComponent(
+          newPassword
+        )}&confirmPassword=${encodeURIComponent(confirmPassword)}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (response.ok) {
-        setMessage("Password successfully reset. Redirecting...");
-        setTimeout(() => router.push("/auth/login"), 3000);
+        setMessage("Password reset successfully. Redirecting to login...");
+        setTimeout(() => router.push("/auth/login"), 2000);
       } else {
         const data = await response.json();
-        setError(data.message || "Invalid or expired token.");
+        setError(data.message || "Failed to reset password.");
       }
     } catch (err) {
+      console.error("Reset Password Error:", err);
       setError("Something went wrong. Please try again.");
     }
+
     setLoading(false);
   };
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-dark">
-      <Card className="bg-cardBg shadow-xl p-10 rounded-lg border border-gray-700 w-full max-w-2xl">
-        <h2 className="text-3xl font-bold text-center">Reset Password</h2>
-        <p className="text-center text-textSecondary text-lg">
+      <div className="bg-[#1E2535] shadow-xl p-12 rounded-lg border border-gray-700 w-full max-w-3xl">
+        <h2 className="text-3xl font-bold text-center text-white">
+          Reset Password
+        </h2>
+        <p className="text-center text-textSecondary text-lg text-white">
           Enter your new password below.
         </p>
 
         <form className="space-y-6 mt-6" onSubmit={handleResetPassword}>
           <div>
-            <Label className="text-xl">New Password</Label>
+            <label className="text-xl text-white">New Password</label>
             <Input
               type="password"
-              placeholder="********"
+              placeholder="Enter new password"
               className="mt-2 bg-inputBg text-textPrimary border-none p-4 text-lg w-full rounded-lg"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
           </div>
+
           <div>
-            <Label className="text-xl">Confirm Password</Label>
+            <label className="text-xl text-white">Confirm Password</label>
             <Input
               type="password"
-              placeholder="********"
+              placeholder="Confirm new password"
               className="mt-2 bg-inputBg text-textPrimary border-none p-4 text-lg w-full rounded-lg"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>
+
           <Button
             type="submit"
             className="w-full bg-buttonBg text-white hover:bg-buttonHover p-4 text-lg rounded-lg"
@@ -93,18 +102,13 @@ export default function ResetPassword() {
           <p className="text-green-500 text-center mt-4">{message}</p>
         )}
         {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-
-        <Separator className="my-6 bg-gray-600" />
-        <p className="text-center">
-          Remembered your password?{" "}
-          <a
-            href="/auth/login"
-            className="text-primary hover:underline font-semibold"
-          >
-            Log in
-          </a>
-        </p>
-      </Card>
+      </div>
+      <style jsx global>{`
+        input {
+          color: black !important;
+          caret-color: black !important;
+        }
+      `}</style>
     </div>
   );
 }

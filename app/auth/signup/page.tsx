@@ -63,7 +63,7 @@ export default function SignupPage() {
       await axios.post("/users/register", userPayload);
 
       if (role === "interviewer") {
-        router.push(`/auth/verify-email?email=${formData.workEmail}`);
+        router.push("/dashboard");
       } else {
         router.push("/dashboard");
       }
@@ -230,6 +230,12 @@ export default function SignupPage() {
           </p>
         </Card>
       </motion.div>
+      <style jsx global>{`
+        input {
+          color: black !important;
+          caret-color: black !important;
+        }
+      `}</style>
     </div>
   );
 }

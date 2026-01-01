@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -14,43 +14,54 @@ import { FaLinkedin, FaGithub } from "react-icons/fa6";
 import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, user, loading } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
-  const [loading, setLoading] = useState(false);
+  const [localLoading, setLocalLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/dashboard");
+    }
+  }, [user, loading, router]);
+
+  if (loading || user) {
+    return (
+      <div className="w-screen min-h-screen flex items-center justify-center bg-dark text-white">
+        We are loading dashboard for you, just a second!
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setLocalLoading(true);
     setError("");
-
     try {
       await login(form.email, form.password);
-      router.push("/dashboard");
-    } catch (err) {
-      setError("Invalid email or password. Please try again.");
+    } catch (err: any) {
       console.error("Login failed:", err);
+      setError("Invalid email or password. Please try again.");
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
     }
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-dark text-white">
+    <div className="w-screen min-h-screen flex items-center justify-center bg-dark text-white">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="w-full max-w-4xl p-12 min-h-[500px]"
       >
-        <Card className="bg-[#1E2535] shadow-lg p-12 rounded-xl border border-gray-700">
+        <Card className="bg-[#1E2535] shadow-lg p-12 rounded-xl border border-gray-700 mt-24">
           <div className="flex justify-center">
             <Avatar className="w-24 h-2">
               <AvatarImage src="/logo.png" alt="MockXpert Logo" />
             </Avatar>
           </div>
-
           <h2 className="text-4xl font-extrabold text-center mt-6 text-white">
             Welcome Back
           </h2>
@@ -60,14 +71,13 @@ export default function LoginPage() {
           {error && (
             <p className="text-red-500 text-center text-lg mt-4">{error}</p>
           )}
-
           <form className="space-y-6 mt-8" onSubmit={handleSubmit}>
             <div>
               <Label className="text-2xl text-white">Email</Label>
               <Input
                 type="email"
                 placeholder="you@example.com"
-                className="mt-2 bg-[#1E2535] text-white border-white p-4 text-xl w-full rounded-xl"
+                className="mt-2 bg-white text-black placeholder-black border-white p-4 text-xl w-full rounded-xl"
                 required
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -78,7 +88,7 @@ export default function LoginPage() {
               <Input
                 type="password"
                 placeholder="********"
-                className="mt-2 bg-[#1E2535] text-white border-white p-4 text-xl w-full rounded-xl"
+                className="mt-2 bg-white text-black placeholder-black border-white p-4 text-xl w-full rounded-xl"
                 required
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -92,18 +102,15 @@ export default function LoginPage() {
                 </Link>
               </div>
             </div>
-
             <Button
               type="submit"
               className="w-full bg-buttonBg text-white hover:bg-buttonHover p-6 text-xl rounded-xl"
-              disabled={loading}
+              disabled={localLoading}
             >
-              {loading ? "Logging in..." : "Login"}
+              {localLoading ? "Logging in..." : "Login"}
             </Button>
           </form>
-
           <Separator className="my-6 bg-gray-600" />
-
           <div className="flex flex-col space-y-4">
             <Button className="w-full flex items-center justify-center gap-3 bg-white text-black text-xl p-6 rounded-xl hover:opacity-90">
               <FcGoogle size={28} /> Sign in with Google
@@ -115,9 +122,7 @@ export default function LoginPage() {
               <FaGithub size={28} /> Sign in with GitHub
             </Button>
           </div>
-
           <Separator className="my-6 bg-gray-600" />
-
           <p className="text-lg text-center text-white">
             Don't have an account?{" "}
             <Link
@@ -129,6 +134,12 @@ export default function LoginPage() {
           </p>
         </Card>
       </motion.div>
+      <style jsx global>{`
+        input {
+          color: black !important;
+          caret-color: black !important;
+        }
+      `}</style>
     </div>
   );
 }

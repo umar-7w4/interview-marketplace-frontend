@@ -1,33 +1,9 @@
 "use client";
+
 import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "@/lib/axios";
 import { useRouter } from "next/navigation";
-
-interface LoginResponse {
-  email: string;
-  role: string;
-  idToken: string;
-  refreshToken: string;
-}
-
-interface User {
-  userId: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  workEmail?: string;
-  password: string;
-  phoneNumber: string;
-  profilePictureUrl?: string;
-  preferredLanguage?: string;
-  timezone?: string;
-  createdAt: string;
-  lastLogin?: string;
-  role: string;
-  status: string;
-  idToken?: string;
-  refreshToken?: string;
-}
+import { User, LoginResponse } from "@/types/auth";
 
 interface AuthContextType {
   user: User | null;
@@ -44,26 +20,58 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  const fetchUserData = async (idToken: string) => {
+    try {
+      const response = await axios.get<User>("/users/current-user", {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+      const fullUserData = { ...response.data, idToken };
+      localStorage.setItem("user", JSON.stringify(fullUserData));
+      setUser(fullUserData);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
+    const storedTokens = localStorage.getItem("authTokens");
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        const parsedUser: User = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+      }
     }
-    setLoading(false);
+    if (storedTokens) {
+      const { idToken } = JSON.parse(storedTokens);
+      if (idToken) {
+        fetchUserData(idToken);
+      } else {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post<User>("/users/login", {
+      const response = await axios.post<LoginResponse>("/users/login", {
         email,
         password,
       });
-
-      const userData: User = response.data;
-
-      localStorage.setItem("user", JSON.stringify(userData));
-
-      setUser(userData);
+      const { idToken, refreshToken } = response.data;
+      localStorage.setItem(
+        "authTokens",
+        JSON.stringify({ idToken, refreshToken })
+      );
+      if (idToken) {
+        await fetchUserData(idToken);
+      }
       router.push("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
@@ -73,11 +81,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signup = async (userData: Partial<User>) => {
     try {
-      const response = await axios.post<User>("/users/register", userData);
-      const newUser: User = response.data; // TypeScript now correctly infers this
-
-      localStorage.setItem("user", JSON.stringify(newUser));
-      setUser(newUser);
+      const response = await axios.post<LoginResponse>(
+        "/users/register",
+        userData
+      );
+      const { idToken, refreshToken } = response.data;
+      localStorage.setItem(
+        "authTokens",
+        JSON.stringify({ idToken, refreshToken })
+      );
+      if (idToken) {
+        await fetchUserData(idToken);
+      }
       router.push("/dashboard");
     } catch (error) {
       console.error("Signup failed:", error);
@@ -87,8 +102,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("authTokens");
     setUser(null);
-    router.push("/auth/login-selection");
+    router.push("/");
   };
 
   return (

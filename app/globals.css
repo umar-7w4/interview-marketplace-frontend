@@ -4,7 +4,7 @@
 
 /* Custom Styles */
 body {
-  @apply bg-dark text-textPrimary;
+  @apply bg-black;
 }
 
 input {
@@ -18,3 +18,200 @@ button {
 .bg-card-gradient {
   background: linear-gradient(135deg, #181C29 30%, #1F2535 100%);
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 15s linear infinite linear;
+}
+
+
+@keyframes dropdown {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-dropdown {
+  animation: dropdown 0.2s ease-out forwards;
+}
+
+@keyframes loading {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.animate-loading {
+  animation: loading 0.5s ease-in-out;
+}
+
+
+.rdp .rdp-caption_dropdowns select,
+.rdp .rdp-caption_dropdowns select option {
+  color: #000 !important; 
+}
+
+
+.dark-daypicker .rdp-caption_dropdowns select {
+  background-color: #1E2535 !important;
+  color: #fff !important;
+  border: 1px solid #414763;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+
+.dark-time-input {
+  background-color: #1E2535 !important;
+  color: #fff !important;
+  border: 1px solid #414763;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.dark-time-input:focus {
+  outline: 2px solid #414763;
+}
+
+.dark-select {
+  background-color: #1E2535 !important;
+  color: #fff !important;
+  border: 1px solid #414763;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.dark-select option {
+  background-color: #1E2535;
+  color: #fff;
+}
+
+
+.rbc-toolbar button,
+.rbc-toolbar .rbc-btn-group .rbc-button {
+     background: rgb(6 182 212 / var(--tw-bg-opacity, 1)) !important;
+     color: #ffeedd !important; /* Slight off-white for contrast */
+     border: 1px solid rgba(255, 255, 255, 0.3) !important;
+     border-radius: 6px !important;
+     margin: 0 0.25rem !important;
+     padding: 0.5rem 1rem !important;
+     font-weight: 600 !important;
+     transition: all 0.2s ease-in-out !important;
+   }
+   
+   .rbc-toolbar button:hover,
+   .rbc-toolbar .rbc-btn-group .rbc-button:hover {
+     transform: scale(1.05);
+     background:  #393966  !important;
+     cursor: pointer !important;
+   }
+   
+   .rbc-toolbar button:active,
+   .rbc-toolbar button:focus,
+   .rbc-toolbar .rbc-btn-group .rbc-button:active,
+   .rbc-toolbar .rbc-btn-group .rbc-button:focus {
+     outline: none !important;
+     transform: scale(1.02);
+     background: rgb(6 182 212 / var(--tw-bg-opacity, 1)) !important;
+   }
+
+   .rbc-toolbar .rbc-active {
+     box-shadow: 0 0 6px rgba(255, 255, 255, 0.4) !important;
+     background: rgb(6 182 212 / var(--tw-bg-opacity, 1)) !important;
+   }
+   
+   .rbc-calendar, 
+   .rbc-time-view, 
+   .rbc-month-view, 
+   .rbc-time-header, 
+   .rbc-day-slot {
+     background-color: transparent !important;
+     color: #fff !important;
+   }
+ 
+   .rbc-day-bg, 
+   .rbc-slot-selecting {
+     background-color: #1f1f2f !important;
+   }
+
+   .rbc-timeslot-group {
+     border-color: #393966 !important;
+   }
+   .rbc-time-content > * + * > * {
+     border-left: 1px solid #393966 !important;
+   }
+ 
+   .rbc-event-content {
+     color: #fff !important;
+   }
+
+   .rbc-event {
+     transition: transform 0.2s;
+   }
+   .rbc-event:hover {
+     transform: scale(1.02);
+     box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+   }
+
+   .rbc-current-time-indicator {
+     background-color: #ef4444 !important; /* red line for now */
+   }
+ 
+   .rbc-month-row > *:hover {
+     background-color: #2c2f4a !important;
+   }
+ 
+   .rbc-slot-selecting {
+     opacity: 0.4;
+   }
+ 
+   .rbc-today {
+     background-color: #2c2f4a !important;
+   }
+
+   .rbc-time-view .rbc-time-header.rbc-overflowing {
+     box-shadow: none !important;
+   }
+
+   .rbc-toolbar-label {
+    font-size: 1.5rem !important; 
+    font-weight: bold !important;
+    text-align: center !important; 
+    color: #ffffff !important;
+    margin: 0 auto !important;
+  }

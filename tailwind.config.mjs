@@ -5,6 +5,8 @@ export default {
 	  "./app/**/*.{js,ts,jsx,tsx,mdx}",
 	  "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
 	  "./node_modules/@shadcn/ui/dist/**/*.js",
+	  "./pages/**/*.{js,ts,jsx,tsx}",
+	  "./components/**/*.{js,ts,jsx,tsx}",
 	],
 	theme: {
 	  extend: {
@@ -17,19 +19,21 @@ export default {
 		colors: {
 		  primary: "#6366F1",
 		  secondary: "#06B6D4",
+		  blackBright: "#0D0D0D", 
+		  blackGloss: "#121212",
 		  dark: "#121826",
 		  light: "#F8FAFD",
 		  cardBg: {
 			DEFAULT: "#FFFFFF",
-			dark: "#1E2535", // Rich dark navy blue for better blending
+			dark: "#1E2535", 
 		  },						  
 		  textPrimary: {
 			DEFAULT: "#22272E",
-			dark: "#F8FAFC", // Brighter for better contrast
+			dark: "#F8FAFC", 
 		  },
 		  textSecondary: {
 			DEFAULT: "#4B5563",
-			dark: "#E5E7EB", // Light gray for better readability
+			dark: "#E5E7EB", 
 		  },						  
 		  inputBg: {
 			DEFAULT: "#E3E6ED",

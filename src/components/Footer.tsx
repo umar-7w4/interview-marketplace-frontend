@@ -9,7 +9,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-dark text-white border-t border-gray-700 py-16 border-t border-border">
+    <footer className=" bg-dark text-white border-t border-gray-700 py-16 border-t border-border">
       <div className="max-w-7xl mx-auto px-8">
         {/* Footer Navigation */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-12 text-lg">
@@ -57,7 +57,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Solutions */}
+          {}
           <div>
             <h3 className="text-xl font-semibold text-textPrimary mb-4">
               <span className="text-primary font-bold">SOLUTIONS</span>
@@ -86,7 +86,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Resources */}
+          {}
           <div>
             <h3 className="text-xl font-semibold text-textPrimary mb-4">
               <span className="text-primary font-bold">RESOURCES</span>
@@ -125,7 +125,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* About Us */}
+          {}
           <div>
             <h3 className="text-xl font-semibold text-textPrimary mb-4">
               <span className="text-primary font-bold">ABOUT US</span>
@@ -159,7 +159,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Get Started */}
+          {}
           <div>
             <h3 className="text-xl font-semibold text-textPrimary mb-4">
               <span className="text-primary font-bold">GET STARTED</span>
@@ -194,7 +194,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Divider */}
+        {}
         <div className="border-t border-border mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
           {/* Social Icons */}
           <div className="flex space-x-6">
@@ -224,12 +224,12 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Copyright */}
+          {}
           <p className="text-white hover:text-primary transition-all mt-6 md:mt-0">
             © 2025 MockXpert. All Rights Reserved.
           </p>
 
-          {/* Privacy Policy */}
+          {}
           <Link
             href="#"
             className="text-white hover:text-primary transition-all hover:text-primary"
